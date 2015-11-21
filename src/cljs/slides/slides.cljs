@@ -43,22 +43,30 @@
 ;; ------------------
 ;; eval
 
+(def concatv
+  (partial
+    (comp
+      (partial apply vector)
+      concat)))
+
 (declare render)
 
 (defn wrap-render-elements [outer inner elements]
   (apply
-    vector outer
-    (mapv (comp (partial vector inner)
-                (partial render ()))
-         elements)))
+    concatv (seq outer)
+    (vector
+      (mapv (comp (partial concatv (seq inner))
+                  (partial vector)
+                  (partial render ()))
+         elements))))
 
 (defn render [dimentions element]
   (match [element]
     [[:title string]] [:h1 string]
-    [[:text string]] [:p string]
-    [[:v-align elements]] (wrap-render-elements :span :div  elements)
-    [[:h-align elements]] (wrap-render-elements :span :span elements)
-    [[:ulist   elements]] (wrap-render-elements :ul :li elements)))
+    [[:text  string]] [:p  string]
+    [[:v-align elements]] (wrap-render-elements [:span] [:div] elements)
+    [[:h-align elements]] (wrap-render-elements [:span.flexbox] [:span] elements)
+    [[:ulist   elements]] (wrap-render-elements [:ul] [:li] elements)))
 
 ;; -------------------------
 ;; Slides
@@ -75,4 +83,10 @@
     (ulist
       (text "bullet 1")
       (text "bullet 2"))))
+
+(def slide3
+  (h-align slide1 slide2))
+
+(def slide4
+  (v-align slide3 slide3))
 

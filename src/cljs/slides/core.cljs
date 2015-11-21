@@ -10,6 +10,7 @@
 
 (defn home-page []
   [:div [:h2 "Welcome to slides"]
+   (slides/render () slides/slide4)
    [:div [:a {:href "/about"} "go to about page"]]
    [:div [:a {:href "/another"} "go to another page"]]])
 
@@ -21,7 +22,7 @@
 
 (defn another-page []
   [:div [:h2 "Another slides"]
-   (slides/render () slides/slide2)
+   (slides/render () slides/slide3)
    [:div [:a {:href "/"} "go to the home page"]]])
 
 (defn current-page []
